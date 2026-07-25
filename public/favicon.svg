@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="71.5 60.3 200 200">
+  <!-- "+P" mark from the Proactive Accounting & Tax logo.
+       Follows the browser theme: dark mark on light tabs, white mark on dark tabs.
+       Strokes are heavier than the full-size logo so the mark stays legible at 16px,
+       and the glyph's decorative micro-curl at the bowl/stem junction is simplified
+       so it doesn't read as a notch at icon sizes. -->
+  <style>
+    .mark { fill: #231f20; stroke: #231f20; }
+    @media (prefers-color-scheme: dark) {
+      .mark { fill: #ffffff; stroke: #ffffff; }
+    }
+  </style>
+  <line class="mark" x1="78.4" y1="162.5" x2="130.5" y2="162.5" stroke-width="12"/>
+  <line class="mark" x1="105.2" y1="136.4" x2="105.2" y2="188.6" stroke-width="12"/>
+  <path class="mark" stroke-width="5" stroke-linejoin="round" d="M240.5,128.2c0-23.9-14.6-37-41.8-37s-2.9.2-4.6.2v134.6l1.7,2.3,25.2,2.1c1,.4.8,2.3,0,2.7h-66.4c-.8-.4-1-2.3,0-2.7l17.9-1.9,1.7-2.3V94.3l-1.7-2.3-17.9-1.9c-1-.4-.8-2.3,0-2.7h49.9c44.1,0,57.6,17.7,57.6,38.5s-18.9,42.4-50.1,42.4c18-2,28.5-19,28.5-40.1Z"/>
+</svg>

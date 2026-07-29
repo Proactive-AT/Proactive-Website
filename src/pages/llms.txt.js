@@ -12,7 +12,7 @@ Key facts:
 - Website: ${SITE}/
 - Address: 3605 Ocean Ranch Blvd, Suite 202, Oceanside, CA 92056
 - Phone: (760) 205-0625
-- Service area: San Diego County, California (Oceanside, San Diego, and surrounding communities)
+- Service area: San Diego County, California (San Diego and surrounding communities including Oceanside, Carlsbad, Encinitas, Vista, Escondido, Poway, La Jolla, Del Mar, and Rancho Santa Fe) and clients in all 50 states
 - Founder: Ryan D. Sims, CPA, EA, MBA — Certified Public Accountant (California), IRS Enrolled Agent, MBA, small business owner, and military veteran
 - Tax preparation available for clients in all 50 states
 - Ideal clients: small and growing business owners who want one coordinated place for bookkeeping, tax strategy, and year-round planning

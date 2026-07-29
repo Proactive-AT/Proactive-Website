@@ -4,14 +4,13 @@
  * Route: POST /api/contact
  *
  * Environment variables (set in the Cloudflare Pages dashboard):
+ *   RESEND_API_KEY        — API key from resend.com (sending access)
  *   CONTACT_TO_EMAIL      — where submissions are delivered (e.g. ryan@proactive-at.com)
  *   CONTACT_FROM_EMAIL    — verified sender on your domain (e.g. noreply@proactive-at.com)
  *   TURNSTILE_SECRET_KEY  — (optional) Cloudflare Turnstile secret; if set, tokens are verified
  *
- * Email delivery uses MailChannels, which is free for requests originating
- * from Cloudflare Workers/Pages. For MailChannels to accept mail from your
- * domain, add the Domain Lockdown TXT record:
- *   _mailchannels.proactive-at.com  TXT  "v=mc1 cfid=<your-pages-subdomain>.pages.dev"
+ * Email delivery uses Resend (resend.com). The sending domain must be
+ * verified in Resend first — see the README "Contact form configuration".
  */
 
 const REQUIRED_FIELDS = ["name", "email", "message"];
@@ -74,7 +73,7 @@ export async function onRequestPost(context) {
   const message = String(data.message).trim().slice(0, 5000);
 
   const bodyText = [
-    `New contact form submission from proactive-at.com`,
+    `New contact form submission from the website`,
     ``,
     `Name:    ${name}`,
     `Email:   ${email}`,
@@ -86,22 +85,22 @@ export async function onRequestPost(context) {
     .filter((line) => line !== null)
     .join("\n");
 
-  const mail = await fetch("https://api.mailchannels.net/tx/v1/send", {
+  const mail = await fetch("https://api.resend.com/emails", {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${env.RESEND_API_KEY}`,
+    },
     body: JSON.stringify({
-      personalizations: [{ to: [{ email: env.CONTACT_TO_EMAIL }] }],
-      from: {
-        email: env.CONTACT_FROM_EMAIL,
-        name: "Proactive Accounting & Tax — Website",
-      },
-      reply_to: { email, name },
+      from: `Proactive Accounting & Tax — Website <${env.CONTACT_FROM_EMAIL}>`,
+      to: [env.CONTACT_TO_EMAIL],
+      reply_to: `${name} <${email}>`,
       subject: `Website inquiry from ${name}`,
-      content: [{ type: "text/plain", value: bodyText }],
+      text: bodyText,
     }),
   });
 
-  if (!mail.ok && mail.status !== 202) {
+  if (!mail.ok) {
     return json(
       { ok: false, error: "Something went wrong sending your message. Please call us at (760) 205-0625." },
       502

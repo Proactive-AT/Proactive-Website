@@ -1,4 +1,8 @@
-# proactive-at.com — all crawlers welcome
+// Generated at build time so the sitemap URL always follows the site domain
+// configured in astro.config.mjs.
+export function GET({ site }) {
+  const SITE = site.origin;
+  const body = `# ${site.hostname} — all crawlers welcome
 User-agent: *
 Allow: /
 
@@ -36,4 +40,7 @@ Allow: /
 User-agent: Bytespider
 Allow: /
 
-Sitemap: https://proactive-at.com/sitemap.xml
+Sitemap: ${SITE}/sitemap.xml
+`;
+  return new Response(body, { headers: { "content-type": "text/plain; charset=utf-8" } });
+}

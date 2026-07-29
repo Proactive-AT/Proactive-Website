@@ -7,5 +7,9 @@ node_modules/
 dist/
 .astro/
 
+# macOS
+.DS_Store
+._*
+
 # Claude Code local settings
 .claude/

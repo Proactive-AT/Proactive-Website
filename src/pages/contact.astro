@@ -1,15 +1,17 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 
+const SITE = Astro.site.origin;
+
 const schema = {
   "@context": "https://schema.org",
   "@type": "ContactPage",
-  url: "https://proactive-at.com/contact/",
+  url: `${SITE}/contact/`,
   mainEntity: {
     "@type": "AccountingService",
-    "@id": "https://proactive-at.com/#business",
+    "@id": `${SITE}/#business`,
     name: "Proactive Accounting & Tax",
-    url: "https://proactive-at.com/",
+    url: `${SITE}/`,
     telephone: "+1-760-205-0625",
     address: {
       "@type": "PostalAddress",
@@ -30,7 +32,7 @@ const mapSrc =
   description="Contact Proactive Accounting & Tax — your accounting & tax partner in the San Diego area. 3605 Ocean Ranch Blvd, Suite 202, Oceanside, CA 92056. Call (760) 205-0625."
   path="/contact/"
   ogDescription="Your accounting & tax partner in the San Diego area."
-  ogImage="https://proactive-at.com/assets/img/BACK_Header_Office_1800x942.webp"
+  ogImage="/assets/img/BACK_Header_Office_1800x942.webp"
 >
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />

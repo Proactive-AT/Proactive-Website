@@ -41,6 +41,17 @@ Page metadata (title, description, canonical, Open Graph, optional JSON-LD
 schema) is passed to `BaseLayout` as props from each page's frontmatter.
 URLs match the original site (`/our-approach/`, `/contact/`, etc.).
 
+## Changing the site domain
+
+The domain lives in exactly one place: **`site` in `astro.config.mjs`**.
+Canonical URLs, Open Graph tags, JSON-LD schema, `sitemap.xml`, `robots.txt`,
+and `llms.txt` all derive from it at build time (the latter three are generated
+by `src/pages/*.txt.js` / `*.xml.js` endpoints). Currently
+`https://atproactive.com` during the 60-day registrar lock on proactive-at.com;
+when the lock expires, change that one line back to `https://proactive-at.com`
+and rebuild. Email addresses (`ryan@proactive-at.com`) are unrelated to the
+site domain and hardcoded where they appear.
+
 ## Local development
 
 ```
@@ -63,27 +74,20 @@ npm run preview    # serve dist/ locally
 ## Contact form configuration
 
 The form on `/contact/` posts to `/api/contact`, which emails the submission via
-MailChannels (free from Cloudflare Workers/Pages). Set these environment variables
-in **Pages → Settings → Environment variables**:
+[Resend](https://resend.com) (free tier: 3,000 emails/month). Setup:
+
+1. Create a Resend account and verify the domain: **Resend → Domains → Add Domain**
+   → `atproactive.com` (its DNS is on Cloudflare, so the DKIM/SPF records Resend
+   shows are added in the Cloudflare DNS dashboard). Click Verify.
+2. Create an API key: **Resend → API Keys → Create** (Sending access is enough).
+3. Set these environment variables in **Pages → Settings → Environment variables**:
 
 | Variable | Required | Example |
 |---|---|---|
+| `RESEND_API_KEY` | yes | `re_…` (from step 2) |
 | `CONTACT_TO_EMAIL` | yes | `ryan@proactive-at.com` |
-| `CONTACT_FROM_EMAIL` | yes | `noreply@proactive-at.com` |
+| `CONTACT_FROM_EMAIL` | yes | `noreply@atproactive.com` (must match the Resend-verified domain) |
 | `TURNSTILE_SECRET_KEY` | no | enables Cloudflare Turnstile bot protection |
-
-For MailChannels to accept mail from the domain, add this DNS TXT record
-(Domain Lockdown):
-
-```
-_mailchannels.proactive-at.com  TXT  "v=mc1 cfid=<your-project>.pages.dev"
-```
-
-For best deliverability also add an SPF record that includes MailChannels:
-
-```
-proactive-at.com  TXT  "v=spf1 a mx include:relay.mailchannels.net ~all"
-```
 
 ### Optional: Turnstile (bot protection)
 

@@ -1,15 +1,17 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 
+const SITE = Astro.site.origin;
+
 const schema = {
   "@context": "https://schema.org",
   "@type": "AccountingService",
-  "@id": "https://proactive-at.com/#business",
+  "@id": `${SITE}/#business`,
   name: "Proactive Accounting & Tax",
-  url: "https://proactive-at.com/",
+  url: `${SITE}/`,
   description:
     "San Diego area CPA and accounting service providing year-round tax planning, tax preparation, bookkeeping, and business advisory for small business owners.",
-  image: "https://proactive-at.com/assets/img/IMG_Home-Ryan_1200x1500webp.webp",
+  image: `${SITE}/assets/img/IMG_Home-Ryan_1200x1500webp.webp`,
   telephone: "+1-760-205-0625",
   address: {
     "@type": "PostalAddress",
@@ -23,10 +25,10 @@ const schema = {
   areaServed: { "@type": "AdministrativeArea", name: "San Diego County, CA" },
   founder: {
     "@type": "Person",
-    "@id": "https://proactive-at.com/meet-ryan-sims/#ryan-sims",
+    "@id": `${SITE}/meet-ryan-sims/#ryan-sims`,
     name: "Ryan D. Sims",
     jobTitle: "CPA, EA, MBA",
-    url: "https://proactive-at.com/meet-ryan-sims/",
+    url: `${SITE}/meet-ryan-sims/`,
   },
   hasOfferCatalog: {
     "@type": "OfferCatalog",
@@ -45,7 +47,7 @@ const schema = {
   description="Your business deserves a tax partner. And not just in April. Proactive Accounting & Tax is your San Diego area based CPA and accounting service providing tax planning, bookkeeping, and advisory for small business owners."
   path="/"
   ogDescription="Your business deserves a tax partner. And not just in April."
-  ogImage="https://proactive-at.com/assets/img/IMG_Home-Woman_960x1200.webp"
+  ogImage="/assets/img/IMG_Home-Woman_960x1200.webp"
 >
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />

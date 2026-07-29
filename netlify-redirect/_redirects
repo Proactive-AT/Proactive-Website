@@ -1,0 +1,8 @@
+# Temporary stopgap (60-day domain lock at Wix):
+# proactive-at.com currently points at Netlify; forward every request to the
+# real site on Cloudflare at atproactive.com, preserving deep links.
+# 302 = TEMPORARY redirect — proactive-at.com becomes the primary domain again
+# once the registrar lock expires, so we do NOT want search engines to
+# permanently reindex under atproactive.com.
+# "!" = force, even when a file exists at the path.
+/*  https://atproactive.com/:splat  302!

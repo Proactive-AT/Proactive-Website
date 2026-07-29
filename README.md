@@ -2,7 +2,8 @@
 
 Rebuild of the original WordPress site as a static **Astro** project.
 The build outputs plain, zero-JavaScript-framework HTML/CSS — deployed on
-**Cloudflare Pages**.
+**Cloudflare Workers** (static assets + one on-demand API route for the
+contact form, via `@astrojs/cloudflare` and `wrangler.jsonc`).
 
 ## Structure
 
@@ -33,9 +34,11 @@ The build outputs plain, zero-JavaScript-framework HTML/CSS — deployed on
 │       ├── fonts/                  # Trirong + Source Sans 3 woff2 (latin subset)
 │       ├── js/main.js              # Sticky header, mobile nav, form submit, click-to-load map
 │       └── img/                    # All images
-└── functions/
-    └── api/contact.js              # Cloudflare Pages Function (POST /api/contact)
+└── wrangler.jsonc                  # Cloudflare Workers config (worker + static assets)
 ```
+
+The contact form endpoint lives at `src/pages/api/contact.js` — an Astro API
+route with `prerender = false`, compiled into the Worker at build time.
 
 Page metadata (title, description, canonical, Open Graph, optional JSON-LD
 schema) is passed to `BaseLayout` as props from each page's frontmatter.
@@ -61,15 +64,11 @@ npm run build      # static output → dist/
 npm run preview    # serve dist/ locally
 ```
 
-## Deploying to Cloudflare Pages
+## Deploying to Cloudflare Workers
 
-1. Push this repo to Git and connect it in the Cloudflare dashboard
-   (**Workers & Pages → Create → Pages**).
-   - Framework preset: **Astro**
-   - Build command: `npm run build`
-   - Build output directory: `dist`
-2. The `functions/` directory at the repo root is picked up automatically —
-   `functions/api/contact.js` becomes the `POST /api/contact` endpoint.
+The repo is connected to Cloudflare Workers Builds (set up by Cloudflare's
+auto-config PR): every push to `main` builds with `npm run build` and deploys
+per `wrangler.jsonc`. Manual deploys also work: `npm run build && npx wrangler deploy`.
 
 ## Contact form configuration
 
@@ -80,7 +79,9 @@ The form on `/contact/` posts to `/api/contact`, which emails the submission via
    → `atproactive.com` (its DNS is on Cloudflare, so the DKIM/SPF records Resend
    shows are added in the Cloudflare DNS dashboard). Click Verify.
 2. Create an API key: **Resend → API Keys → Create** (Sending access is enough).
-3. Set these environment variables in **Pages → Settings → Environment variables**:
+3. Set these environment variables in the Cloudflare dashboard: **Workers &
+   Pages → proactive-website → Settings → Variables and Secrets** (add
+   `RESEND_API_KEY` as a *Secret*):
 
 | Variable | Required | Example |
 |---|---|---|
@@ -122,10 +123,13 @@ submissions.
 
 ## Testing the contact form locally
 
-`npm run dev` serves the pages but not the Cloudflare function. To exercise
-`/api/contact` locally, build first and run wrangler against the output:
+Create a `.dev.vars` file in the repo root (gitignored) with the same
+variables (`RESEND_API_KEY=…` etc.), then:
 
 ```
 npm run build
-npx wrangler pages dev dist
+npx wrangler dev
 ```
+
+This runs the real Worker locally — static pages plus the live `/api/contact`
+endpoint.

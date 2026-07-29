@@ -1,22 +1,25 @@
 /**
- * Cloudflare Pages Function — handles POSTs from the contact form.
+ * Contact form endpoint — POST /api/contact
  *
- * Route: POST /api/contact
+ * Runs on-demand inside the Cloudflare Worker (this route is excluded from
+ * prerendering; the @astrojs/cloudflare adapter compiles it into
+ * dist/_worker.js). The static pages around it are unaffected.
  *
- * Environment variables (set in the Cloudflare Pages dashboard):
+ * Environment variables (Cloudflare dashboard → the Worker → Settings →
+ * Variables and Secrets; locally, put them in a .dev.vars file):
  *   RESEND_API_KEY        — API key from resend.com (sending access)
  *   CONTACT_TO_EMAIL      — where submissions are delivered (e.g. ryan@proactive-at.com)
- *   CONTACT_FROM_EMAIL    — verified sender on your domain (e.g. noreply@proactive-at.com)
+ *   CONTACT_FROM_EMAIL    — verified sender on the Resend-verified domain
+ *                           (e.g. noreply@atproactive.com)
  *   TURNSTILE_SECRET_KEY  — (optional) Cloudflare Turnstile secret; if set, tokens are verified
- *
- * Email delivery uses Resend (resend.com). The sending domain must be
- * verified in Resend first — see the README "Contact form configuration".
  */
+
+export const prerender = false;
 
 const REQUIRED_FIELDS = ["name", "email", "message"];
 
-export async function onRequestPost(context) {
-  const { request, env } = context;
+export async function POST({ request, locals }) {
+  const env = locals.runtime.env;
 
   let data;
   const contentType = request.headers.get("content-type") || "";

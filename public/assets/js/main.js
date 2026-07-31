@@ -108,6 +108,8 @@
         })
         .finally(function () {
           button.disabled = false;
+          // Turnstile tokens are single-use; get a fresh one for any retry.
+          if (window.turnstile) window.turnstile.reset();
         });
     });
   }

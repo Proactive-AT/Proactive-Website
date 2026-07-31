@@ -6,6 +6,14 @@
     "enabled": true
   },
   "main": "dist/_worker.js/index.js",
+  // Non-secret contact-form config lives here so deploys can't wipe it.
+  // (Each `wrangler deploy` — including Workers Builds — replaces dashboard-set
+  // plain-text Variables with what's in this file. Secrets are unaffected.)
+  "vars": {
+    "CONTACT_FROM_EMAIL": "noreply@atproactive.com",
+    "CONTACT_TO_EMAIL": "ryan@proactive-at.com"
+  },
+  "keep_vars": true,
   "compatibility_flags": [
     "global_fetch_strictly_public",
     "nodejs_compat"

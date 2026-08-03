@@ -107,8 +107,14 @@ export async function POST({ request, locals }) {
 
   if (!mail.ok) {
     // Surface the real Resend error in Worker logs (dashboard → Logs, or `wrangler tail`).
+    // Also fingerprint the key (presence/length/prefix only — never the value) to
+    // distinguish "secret not reaching the worker" from "wrong key stored".
     const detail = await mail.text().catch(() => "");
-    console.error(`Resend send failed: HTTP ${mail.status} — ${detail}`);
+    const key = env.RESEND_API_KEY || "";
+    console.error(
+      `Resend send failed: HTTP ${mail.status} — ${detail} ` +
+      `(key present: ${Boolean(key)}, length: ${key.length}, prefix: ${key.slice(0, 3)})`
+    );
     return json(
       { ok: false, error: "Something went wrong sending your message. Please call us at (760) 205-0625." },
       502

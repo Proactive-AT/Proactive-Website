@@ -34,8 +34,10 @@ export async function POST({ request, locals }) {
     return json({ ok: false, error: "Invalid request body." }, 400);
   }
 
-  // Honeypot — real users never fill this hidden field.
-  if (data.company_website) {
+  // Honeypot — real users never fill this hidden field. (Named to dodge
+  // browser autofill: a "company_website" field gets autofilled alongside
+  // name/email, silently swallowing real submissions.)
+  if (data.extra_note) {
     return json({ ok: true }); // pretend success to bots
   }
 

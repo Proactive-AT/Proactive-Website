@@ -82,10 +82,12 @@ const mapSrc =
             <label for="cf-message">How can we help?</label>
             <textarea id="cf-message" name="message" required></textarea>
           </div>
-          <!-- Honeypot: hidden from humans, bots fill it in -->
+          <!-- Honeypot: hidden from humans, bots fill it in. The name must not
+               match browser-autofill heuristics (company/website/org/etc.) or
+               real users' autofill silently trips it. -->
           <div class="honeypot" aria-hidden="true">
-            <label for="cf-company-website">Leave this field empty</label>
-            <input type="text" id="cf-company-website" name="company_website" tabindex="-1" autocomplete="off">
+            <label for="cf-extra-note">Leave this field empty</label>
+            <input type="text" id="cf-extra-note" name="extra_note" tabindex="-1" autocomplete="off">
           </div>
           <div class="cf-turnstile" data-sitekey="0x4AAAAAAEAn6_CorjLdONZj"></div>
           <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
